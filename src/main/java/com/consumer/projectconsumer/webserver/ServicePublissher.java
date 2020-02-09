@@ -1,6 +1,5 @@
 package com.consumer.projectconsumer.webserver;
 
-import com.consumer.projectconsumer.db.Publisher;
 import com.consumer.projectconsumer.db.PublisherEvent;
 import com.consumer.projectconsumer.webserver.errors.CustomRestErrorResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,6 @@
 package com.consumer.projectconsumer.wenServerTests.unit;
 import com.consumer.projectconsumer.db.PublisherEvent;
 import com.consumer.projectconsumer.webserver.Controller;
-import com.consumer.projectconsumer.webserver.PublisherEntity;
 import com.consumer.projectconsumer.webserver.ServicePublissher;
 import com.consumer.projectconsumer.wenServerTests.AbstractTest;
 import org.junit.Assert;
@@ -23,9 +22,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 
 import javax.transaction.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -58,7 +54,7 @@ public class ControllerUnitTest extends AbstractTest {
     @Test
     public void testGetRequest() throws Exception {
         Integer id = 1;
-        PublisherEntity data = getSetData();
+        PublisherEvent data = getSetData();
 
         when(servicePublissher.findOne(id)).thenReturn(new ResponseEntity(data, HttpStatus.OK));
 
@@ -68,7 +64,7 @@ public class ControllerUnitTest extends AbstractTest {
         String content = result.getResponse().getContentAsString();
         int status = result.getResponse().getStatus();
 
-        PublisherEntity publisher = mapFromJson(content, PublisherEntity.class);
+        PublisherEvent publisher = mapFromJson(content, PublisherEvent.class);
         Assert.assertEquals("failure - expected HTTP status 200", 200, status);
         Assert.assertEquals("failure, Author did not match: ", data.getReadings(), publisher.getReadings());
     }
@@ -93,7 +89,7 @@ public class ControllerUnitTest extends AbstractTest {
     @Test
     public void testCreateBook() throws Exception {
 
-        PublisherEntity data = getSetData();
+        PublisherEvent data = getSetData();
         when(servicePublissher.save(any(PublisherEvent.class))).thenReturn(new ResponseEntity(data, HttpStatus.CREATED));
 
         String inputJson = mapToJson(data);
@@ -112,14 +108,14 @@ public class ControllerUnitTest extends AbstractTest {
                 "failure - expected HTTP response body to have a value",
                 content.trim().length() > 0);
 
-        PublisherEntity newEntity = mapFromJson(content, PublisherEntity.class);
+        PublisherEvent newEntity = mapFromJson(content, PublisherEvent.class);
         Assert.assertNotNull("failure - expected id attribute not null",
                 newEntity.getPublisherID());
     }
 
     @Test
     public void testUpdate() throws Exception {
-        PublisherEntity data = getSetData();
+        PublisherEvent data = getSetData();
         Integer prevData = data.getReadings();
         data.setReadings(data.getReadings());
         Integer id = 1;
@@ -142,7 +138,7 @@ public class ControllerUnitTest extends AbstractTest {
                 "failure - expected HTTP response body to have a value",
                 content.trim().length() > 0);
 
-        PublisherEntity updatedData = super.mapFromJson(content, PublisherEntity.class);
+        PublisherEvent updatedData = super.mapFromJson(content, PublisherEvent.class);
         Assert.assertNotNull("failure - expected entity not null",
                 updatedData);
         Assert.assertNotEquals("failure - expected readings not to match",
@@ -171,24 +167,13 @@ public class ControllerUnitTest extends AbstractTest {
 
 
 
-    private PublisherEntity getSetData() {
-        PublisherEntity p = new PublisherEntity();
+    private PublisherEvent getSetData() {
+        PublisherEvent p = new PublisherEvent();
         p.setPublisherID(1);
         p.setTime("11:11");
         p.setReadings(700);
         return p;
     }
 
-    private List<PublisherEntity> getDataList() {
-        List<PublisherEntity> pList = new ArrayList<PublisherEntity>();
-        for(int i=1; i < 6; i++){
-            PublisherEntity p = new PublisherEntity();
-            p.setPublisherID( i);
-            p.setReadings(i);
-            p.setTime("Time" + i);
-            pList.add(p);
-        }
-        return pList;
-    }
 
 }
