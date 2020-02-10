@@ -8,17 +8,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 public class CustomRestErrorResponseHandler extends ResponseEntityExceptionHandler {
 
-    /**
-     * Gets DataIntegrityViolationException and returns ResponseEntity object with CustomError
-     * @param e
-     * @return
-     */
-    public static ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        String detailError = e.getMostSpecificCause().getMessage();
-        String customError = getCustomErrorMessages(detailError);
-        final CustomError ce = new CustomError(HttpStatus.CONFLICT, detailError, customError);
-        return new ResponseEntity<Object>(ce, new HttpHeaders(), HttpStatus.CONFLICT);
-    }
 
     /**
      * Gets HttpClientErrorException.BadRequest and returns ResponseEntity object with CustomError
@@ -50,18 +39,5 @@ public class CustomRestErrorResponseHandler extends ResponseEntityExceptionHandl
         return new ResponseEntity<Object>(ce, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * Gets detailError on DataIntegrityViolationException and returns custom error message
-     * @param detailError
-     * @return
-     */
-    private static String getCustomErrorMessages(String detailError) {
-        String customError = "Unique key violation";
-        if(detailError.contains("AUTHOR"))
-            customError = "'AUTHOR'"+" cannot be duplicate!";
-        else if(detailError.contains("TITLE"))
-            customError = "'TITLE'"+" cannot be duplicate!";
 
-        return customError;
-    }
 }
