@@ -55,8 +55,6 @@ public class ServicePublissher {
             httpStatus = HttpStatus.OK;
             try {
                 publisherRepository.save(publisherEntity);
-            } catch (DataIntegrityViolationException e) {
-                return CustomRestErrorResponseHandler.handleDataIntegrityViolationException(e);
             } catch (Exception e) {
                 return CustomRestErrorResponseHandler.handleInternalServerError(e);
             }
